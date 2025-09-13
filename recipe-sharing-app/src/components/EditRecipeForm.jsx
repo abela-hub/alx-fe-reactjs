@@ -1,11 +1,27 @@
-// src/components/AddRecipeForm.jsx
-import { useState } from 'react';
+// src/components/EditRecipeForm.jsx
+import { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useRecipeStore } from './recipeStore';
 
-const AddRecipeForm = () => {
-    const addRecipe = useRecipeStore((state) => state.addRecipe);
+const EditRecipeForm = () => {
+    const { id } = useParams();
+    const navigate = useNavigate();
+    const recipe = useRecipeStore((state) => state.recipes.find((r) => r.id === id));
+    const updateRecipe = useRecipeStore((state) => state.updateRecipe);
+
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
+
+    useEffect(() => {
+        if (recipe) {
+            setTitle(recipe.title);
+            setDescription(recipe.description);
+        }
+    }, [recipe]);
+
+    if (!recipe) {
+        return <p>Recipe not found.</p>;
+    }
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -13,9 +29,8 @@ const AddRecipeForm = () => {
         const d = description.trim();
         if (!t || !d) return;
 
-        addRecipe({ id: Date.now().toString(), title: t, description: d });
-        setTitle('');
-        setDescription('');
+        updateRecipe({ id, title: t, description: d });
+        navigate(`/recipes/${id}`);
     };
 
     return (
@@ -31,12 +46,13 @@ const AddRecipeForm = () => {
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 placeholder="Recipe Description"
-                rows={4}
+                rows={6}
                 style={{ display: 'block', marginBottom: '8px', padding: '8px', width: '100%' }}
             />
-            <button type="submit" style={{ padding: '8px 12px' }}>Add Recipe</button>
+            <button type="submit">Save</button>
+            <button type="button" onClick={() => navigate(-1)} style={{ marginLeft: '8px' }}>Cancel</button>
         </form>
     );
 };
 
-export default AddRecipeForm;
+export default EditRecipeForm;
