@@ -1,4 +1,3 @@
-// src/components/EditRecipeForm.jsx
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useRecipeStore } from './recipeStore';
@@ -6,7 +5,9 @@ import { useRecipeStore } from './recipeStore';
 const EditRecipeForm = () => {
     const { id } = useParams();
     const navigate = useNavigate();
-    const recipe = useRecipeStore((state) => state.recipes.find((r) => r.id === id));
+    const recipe = useRecipeStore((state) =>
+        state.recipes.find((r) => r.id === id)
+    );
     const updateRecipe = useRecipeStore((state) => state.updateRecipe);
 
     const [title, setTitle] = useState('');
@@ -19,38 +20,30 @@ const EditRecipeForm = () => {
         }
     }, [recipe]);
 
-    if (!recipe) {
-        return <p>Recipe not found.</p>;
-    }
+    if (!recipe) return <p>Recipe not found.</p>;
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        const t = title.trim();
-        const d = description.trim();
-        if (!t || !d) return;
-
-        updateRecipe({ id, title: t, description: d });
-        navigate(`/recipes/${id}`);
+        if (!title.trim() || !description.trim()) return;
+        updateRecipe({ id: recipe.id, title: title.trim(), description: description.trim() });
+        navigate(`/recipes/${recipe.id}`);
     };
 
     return (
-        <form onSubmit={handleSubmit} style={{ margin: '16px 0' }}>
+        <form onSubmit={handleSubmit}>
             <input
                 type="text"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 placeholder="Recipe Title"
-                style={{ display: 'block', marginBottom: '8px', padding: '8px', width: '100%' }}
             />
             <textarea
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 placeholder="Recipe Description"
-                rows={6}
-                style={{ display: 'block', marginBottom: '8px', padding: '8px', width: '100%' }}
             />
             <button type="submit">Save</button>
-            <button type="button" onClick={() => navigate(-1)} style={{ marginLeft: '8px' }}>Cancel</button>
+            <button type="button" onClick={() => navigate(-1)}>Cancel</button>
         </form>
     );
 };

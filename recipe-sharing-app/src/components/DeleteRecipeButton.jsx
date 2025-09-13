@@ -1,4 +1,3 @@
-// src/components/DeleteRecipeButton.jsx
 import { useRecipeStore } from './recipeStore';
 import { useNavigate } from 'react-router-dom';
 
@@ -7,11 +6,10 @@ const DeleteRecipeButton = ({ recipeId }) => {
     const navigate = useNavigate();
 
     const handleDelete = () => {
-        const ok = window.confirm('Delete this recipe?');
-        if (!ok) return;
-        deleteRecipe(recipeId);
-        // optional: if deleting from details page you'd want to navigate away
-        // navigate('/');
+        if (window.confirm('Are you sure you want to delete this recipe?')) {
+            deleteRecipe(recipeId);
+            navigate('/');
+        }
     };
 
     return <button onClick={handleDelete}>Delete</button>;
