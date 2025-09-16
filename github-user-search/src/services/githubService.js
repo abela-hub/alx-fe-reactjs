@@ -1,21 +1,20 @@
-const BASE_URL = "https://api.github.com/search/users?q";  // required string
+const GITHUB_TOKEN = import.meta.env.VITE_GITHUB_TOKEN;
 
-// filters = { username, location, minRepos }
 export async function searchUsers({ username, location, minRepos }) {
     let query = "";
-
     if (username) query += `${username} in:login`;
     if (location) query += ` location:${location}`;
     if (minRepos) query += ` repos:>=${minRepos}`;
 
-    const url = `${BASE_URL}=${encodeURIComponent(query)}&per_page=30`;
-    // ✅ includes https://api.github.com/search/users?q
+    const url = `https://api.github.com/search/users?q=${encodeURIComponent(query)}&per_page=30`;
 
-    const response = await fetch(url);
-    if (!response.ok) {
-        throw new Error("Failed to fetch users");
-    }
+    const response = await fetch(url, {
+        headers: GITHUB_TOKEN
+            ? { Authorization: `Bearer ${GITHUB_TOKEN}` }
+            : {}, // ✅ only add if exists
+    });
 
+    if (!response.ok) throw new Error("Failed to fetch users");
     const data = await response.json();
     return data.items || [];
 }
