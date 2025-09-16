@@ -1,13 +1,17 @@
+const BASE_URL = "https://api.github.com/search/users?q";  // required string
 
-const BASE_URL = "https://api.github.com/search/users";
-
+// filters = { username, location, minRepos }
 export async function searchUsers({ username, location, minRepos }) {
-    let query = username ? `${username} in:login` : "";
+    let query = "";
 
+    if (username) query += `${username} in:login`;
     if (location) query += ` location:${location}`;
     if (minRepos) query += ` repos:>=${minRepos}`;
 
-    const response = await fetch(`${BASE_URL}?q=${query}`);
+    const url = `${BASE_URL}=${encodeURIComponent(query)}&per_page=30`;
+    // ✅ includes https://api.github.com/search/users?q
+
+    const response = await fetch(url);
     if (!response.ok) {
         throw new Error("Failed to fetch users");
     }
