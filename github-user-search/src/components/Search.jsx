@@ -7,15 +7,19 @@ function Search() {
     const [minRepos, setMinRepos] = useState("");
     const [users, setUsers] = useState([]);
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
+    // ✅ Explicit fetchUserData function for API handling
+    const fetchUserData = async (filters) => {
         try {
-            // ✅ async/await usage
-            const results = await searchUsers({ username, location, minRepos });
+            const results = await searchUsers(filters);
             setUsers(results);
         } catch (error) {
-            console.error(error.message);
+            console.error("Error fetching data:", error);
         }
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        await fetchUserData({ username, location, minRepos });
     };
 
     return (
@@ -56,35 +60,34 @@ function Search() {
 
             {/* Results Section */}
             <div className="mt-6">
-                {users.length > 0 && ({/* ✅ "&&" conditional rendering */ }
-                    < div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {users.map((user) => ({/* ✅ "map" usage */ }
-                    < div
-                key = { user.id }
-                className = "p-4 bg-white shadow-md rounded-xl flex flex-col items-center"
-                    >
-                <img
-                  src={user.avatar_url}
-                  alt={user.login}
-                  className="w-20 h-20 rounded-full mb-3"
-                />
-                <h2 className="font-semibold text-lg">{user.login}</h2>
-                <a
-                  href={user.html_url}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="text-blue-600 hover:underline"
-                >
-                  View Profile
-                </a>
-              </div>
-            ))}
+                {users.length > 0 && (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {users.map((user) => (
+                            <div
+                                key={user.id}
+                                className="p-4 bg-white shadow-md rounded-xl flex flex-col items-center"
+                            >
+                                <img
+                                    src={user.avatar_url}
+                                    alt={user.login}
+                                    className="w-20 h-20 rounded-full mb-3"
+                                />
+                                <h2 className="font-semibold text-lg">{user.login}</h2>
+                                <a
+                                    href={user.html_url}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className="text-blue-600 hover:underline"
+                                >
+                                    View Profile
+                                </a>
+                            </div>
+                        ))}
+                    </div>
+                )}
+            </div>
         </div>
-    )
-}
-      </div >
-    </div >
-  );
+    );
 }
 
 export default Search;
