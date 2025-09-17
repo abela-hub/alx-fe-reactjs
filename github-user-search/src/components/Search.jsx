@@ -1,93 +1,69 @@
 import { useState } from "react";
-import { searchUsers } from "../services/githubService";
+import { fetchUserData } from "../services/githubService";
 
-function Search() {
+export default function Search() {
     const [username, setUsername] = useState("");
-    const [location, setLocation] = useState("");
-    const [minRepos, setMinRepos] = useState("");
-    const [users, setUsers] = useState([]);
+    const [user, setUser] = useState(null);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState("");
 
-    // ✅ Explicit fetchUserData function for API handling
-    const fetchUserData = async (filters) => {
+    const handleSearch = async (e) => {
+        e.preventDefault();
+        setLoading(true);
+        setError("");
+        setUser(null);
+
         try {
-            const results = await searchUsers(filters);
-            setUsers(results);
-        } catch (error) {
-            console.error("Error fetching data:", error);
+            const data = await fetchUserData(username);
+            setUser(data);
+        } catch (err) {
+            setError("Looks like we cant find the user");
+        } finally {
+            setLoading(false);
         }
     };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        await fetchUserData({ username, location, minRepos });
-    };
-
     return (
-        <div>
-            {/* Search Form */}
-            <form
-                onSubmit={handleSubmit}
-                className="flex flex-col md:flex-row gap-4 p-4 bg-gray-100 rounded-xl shadow-md"
-            >
+        <div className="max-w-md mx-auto p-4">
+            <form onSubmit={handleSearch} className="flex gap-2 mb-4">
                 <input
                     type="text"
-                    placeholder="Search by username..."
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
-                    className="p-2 rounded-lg border border-gray-300 w-full"
-                />
-                <input
-                    type="text"
-                    placeholder="Filter by location..."
-                    value={location}
-                    onChange={(e) => setLocation(e.target.value)}
-                    className="p-2 rounded-lg border border-gray-300 w-full"
-                />
-                <input
-                    type="number"
-                    placeholder="Min repositories..."
-                    value={minRepos}
-                    onChange={(e) => setMinRepos(e.target.value)}
-                    className="p-2 rounded-lg border border-gray-300 w-full"
+                    placeholder="Search GitHub username..."
+                    className="flex-1 border rounded px-2 py-1"
                 />
                 <button
                     type="submit"
-                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                    className="bg-blue-600 text-white px-3 py-1 rounded"
                 >
                     Search
                 </button>
             </form>
 
-            {/* Results Section */}
-            <div className="mt-6">
-                {users.length > 0 && (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {users.map((user) => (
-                            <div
-                                key={user.id}
-                                className="p-4 bg-white shadow-md rounded-xl flex flex-col items-center"
-                            >
-                                <img
-                                    src={user.avatar_url}
-                                    alt={user.login}
-                                    className="w-20 h-20 rounded-full mb-3"
-                                />
-                                <h2 className="font-semibold text-lg">{user.login}</h2>
-                                <a
-                                    href={user.html_url}
-                                    target="_blank"
-                                    rel="noreferrer"
-                                    className="text-blue-600 hover:underline"
-                                >
-                                    View Profile
-                                </a>
-                            </div>
-                        ))}
-                    </div>
-                )}
-            </div>
+            {loading && <p>Loading...</p>}
+
+            {error && <p className="text-red-500">{error}</p>}
+
+            {user && (
+                <div className="border rounded p-4 shadow">
+                    <img
+                        src={user.avatar_url}
+                        alt={user.login}
+                        className="w-20 h-20 rounded-full mb-2"
+                    />
+                    <h2 className="text-xl font-bold">{user.name || user.login}</h2>
+                    <p>{user.bio}</p>
+                    <a
+                        href={user.html_url}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-blue-500"
+                    >
+                        View Profile
+                    </a>
+                </div>
+            )}
         </div>
     );
 }
-
-export default Search;
