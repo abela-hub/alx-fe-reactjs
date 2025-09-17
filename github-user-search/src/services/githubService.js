@@ -1,28 +1,25 @@
 import axios from "axios";
 
-// If you have a GitHub token in .env for higher rate limits
-const token = import.meta.env.VITE_APP_GITHUB_API_KEY;
-
-// Axios instance
-const api = axios.create({
-    baseURL: "https://api.github.com",
-    headers: token ? { Authorization: `token ${token}` } : undefined,
-});
-
-/**
- * Fetch a single user's full GitHub profile by username
- * Example endpoint: https://api.github.com/users/{username}
- */
+// Single user fetch (basic)
 export const fetchUserData = async (username) => {
-    const response = await api.get(`/users/${username}`);
+    const response = await axios.get(`https://api.github.com/users/${username}`);
     return response.data;
 };
 
-/**
- * Advanced search users (optional)
- * Example endpoint: https://api.github.com/search/users?q={query}
- */
-export const searchUsers = async (query) => {
-    const response = await api.get(`/search/users?q=${query}`);
-    return response.data.items;
+// Advanced search (with location + minRepos)
+export const searchUsers = async (query, location, minRepos) => {
+    let q = query;
+
+    if (location) {
+        q += `+location:${location}`;
+    }
+    if (minRepos) {
+        q += `+repos:>=${minRepos}`;
+    }
+
+    const response = await axios.get(
+        `https://api.github.com/search/users?q=${q}`
+    );
+
+    return response.data;
 };
