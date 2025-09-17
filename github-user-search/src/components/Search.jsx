@@ -1,11 +1,12 @@
 import { useState } from "react";
-import { searchUsers } from "../services/githubService";
+import { fetchUserData, searchUsers } from "../services/githubService";
 
 export default function Search() {
     const [query, setQuery] = useState("");
     const [location, setLocation] = useState("");
     const [minRepos, setMinRepos] = useState("");
     const [users, setUsers] = useState([]);
+    const [singleUser, setSingleUser] = useState(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
 
@@ -14,10 +15,18 @@ export default function Search() {
         setLoading(true);
         setError("");
         setUsers([]);
+        setSingleUser(null);
 
         try {
-            const data = await searchUsers(query, location, minRepos);
-            setUsers(data.items || []);
+            if (location || minRepos) {
+                // Advanced search (multiple users)
+                const data = await searchUsers(query, location, minRepos);
+                setUsers(data.items || []);
+            } else {
+                // Basic search (single user)
+                const data = await fetchUserData(query);
+                setSingleUser(data);
+            }
         } catch (err) {
             setError("Looks like we cant find the user");
         } finally {
@@ -60,6 +69,27 @@ export default function Search() {
             {loading && <p>Loading...</p>}
             {error && <p className="text-red-500">{error}</p>}
 
+            {/* Single user result */}
+            {singleUser && (
+                <div className="border rounded p-4 shadow">
+                    <img
+                        src={singleUser.avatar_url}
+                        alt={singleUser.login}
+                        className="w-16 h-16 rounded-full mb-2"
+                    />
+                    <h2 className="text-lg font-bold">{singleUser.login}</h2>
+                    <a
+                        href={singleUser.html_url}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-blue-500"
+                    >
+                        View Profile
+                    </a>
+                </div>
+            )}
+
+            {/* Multiple users result */}
             <div className="grid gap-4">
                 {users.map((user) => (
                     <div key={user.id} className="border rounded p-4 shadow">
