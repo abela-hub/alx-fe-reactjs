@@ -8,10 +8,10 @@ const UserProfile = () => {
                 alt="User Profile"
                 className="mx-auto rounded-full sm:w-24 sm:h-24 md:w-36 md:h-36 object-cover transform transition-transform duration-300 ease-in-out hover:scale-110"
             />
-            <h2 className="mt-4 text-lg md:text-xl font-semibold text-gray-800 transition-colors duration-300 ease-in-out hover:text-blue-500">
+            <h2 className="my-4 text-lg md:text-xl font-semibold text-blue-800 transition-colors duration-300 ease-in-out hover:text-blue-500">
                 John Doe
             </h2>
-            <p className="mt-2 text-sm md:text-base text-gray-600">
+            <p className="mt-2 text-sm md:text-base text-gray-600 leading-relaxed">
                 Frontend Developer passionate about building interactive and responsive
                 web applications.
             </p>
