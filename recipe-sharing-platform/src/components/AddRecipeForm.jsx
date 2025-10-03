@@ -3,39 +3,41 @@ import { useState } from "react";
 function AddRecipeForm() {
     const [title, setTitle] = useState("");
     const [ingredients, setIngredients] = useState("");
-    const [steps, setSteps] = useState(""); // renamed from instructions
+    const [steps, setSteps] = useState("");
     const [errors, setErrors] = useState({});
+
+    // ✅ Separate validate function
+    const validate = () => {
+        const newErrors = {};
+        if (!title.trim()) newErrors.title = "Title is required";
+        if (!ingredients.trim()) newErrors.ingredients = "Ingredients are required";
+        if (!steps.trim()) newErrors.steps = "Steps are required";
+        return newErrors;
+    };
 
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        // Basic validation
-        const newErrors = {};
-        if (!title.trim()) newErrors.title = "Title is required";
-        if (!ingredients.trim()) newErrors.ingredients = "Ingredients are required";
-        if (!steps.trim()) newErrors.steps = "Steps are required"; // updated
-
-        if (Object.keys(newErrors).length > 0) {
-            setErrors(newErrors);
+        const validationErrors = validate(); // use the validate function
+        if (Object.keys(validationErrors).length > 0) {
+            setErrors(validationErrors);
             return;
         }
 
-        // Prepare new recipe
         const newRecipe = {
             id: Date.now(),
             title,
             ingredients: ingredients.split("\n"),
-            steps: steps.split("\n"), // updated
+            steps: steps.split("\n"),
             image: "https://via.placeholder.com/300x200",
             summary: ingredients.split("\n")[0] || "",
         };
 
         console.log("New Recipe Submitted:", newRecipe);
 
-        // Reset form
         setTitle("");
         setIngredients("");
-        setSteps(""); // updated
+        setSteps("");
         setErrors({});
         alert("Recipe submitted successfully!");
     };
