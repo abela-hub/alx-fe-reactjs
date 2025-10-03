@@ -11,7 +11,7 @@
             "50g parmesan",
             "Black pepper"
         ],
-        "steps": [
+        "instructions": [
             "Boil pasta",
             "Cook pancetta",
             "Mix eggs and cheese",
@@ -30,7 +30,7 @@
             "1 onion",
             "2 tomatoes"
         ],
-        "steps": [
+        "instructions": [
             "Marinate chicken",
             "Grill chicken",
             "Cook onions & tomatoes",
