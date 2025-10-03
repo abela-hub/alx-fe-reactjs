@@ -3,7 +3,7 @@ import { useState } from "react";
 function AddRecipeForm() {
     const [title, setTitle] = useState("");
     const [ingredients, setIngredients] = useState("");
-    const [instructions, setInstructions] = useState("");
+    const [steps, setSteps] = useState(""); // renamed from instructions
     const [errors, setErrors] = useState({});
 
     const handleSubmit = (e) => {
@@ -13,21 +13,21 @@ function AddRecipeForm() {
         const newErrors = {};
         if (!title.trim()) newErrors.title = "Title is required";
         if (!ingredients.trim()) newErrors.ingredients = "Ingredients are required";
-        if (!instructions.trim()) newErrors.instructions = "Instructions are required";
+        if (!steps.trim()) newErrors.steps = "Steps are required"; // updated
 
         if (Object.keys(newErrors).length > 0) {
             setErrors(newErrors);
             return;
         }
 
-        // Example: handle submitted data
+        // Prepare new recipe
         const newRecipe = {
             id: Date.now(),
             title,
-            ingredients: ingredients.split("\n"), // convert textarea lines to array
-            instructions: instructions.split("\n"),
-            image: "https://via.placeholder.com/300x200", // placeholder image
-            summary: ingredients.split("\n")[0] || "", // first line of ingredients as summary
+            ingredients: ingredients.split("\n"),
+            steps: steps.split("\n"), // updated
+            image: "https://via.placeholder.com/300x200",
+            summary: ingredients.split("\n")[0] || "",
         };
 
         console.log("New Recipe Submitted:", newRecipe);
@@ -35,7 +35,7 @@ function AddRecipeForm() {
         // Reset form
         setTitle("");
         setIngredients("");
-        setInstructions("");
+        setSteps(""); // updated
         setErrors({});
         alert("Recipe submitted successfully!");
     };
@@ -77,18 +77,18 @@ function AddRecipeForm() {
                     {errors.ingredients && <p className="text-red-500 text-sm mt-1">{errors.ingredients}</p>}
                 </div>
 
-                {/* Instructions */}
+                {/* Steps */}
                 <div className="mb-4">
-                    <label className="block text-gray-700 font-medium mb-2">Instructions</label>
+                    <label className="block text-gray-700 font-medium mb-2">Steps</label>
                     <textarea
-                        value={instructions}
-                        onChange={(e) => setInstructions(e.target.value)}
+                        value={steps}
+                        onChange={(e) => setSteps(e.target.value)}
                         rows={4}
                         placeholder="Enter each step on a new line"
-                        className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.instructions ? "border-red-500" : "border-gray-300"
+                        className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.steps ? "border-red-500" : "border-gray-300"
                             }`}
                     ></textarea>
-                    {errors.instructions && <p className="text-red-500 text-sm mt-1">{errors.instructions}</p>}
+                    {errors.steps && <p className="text-red-500 text-sm mt-1">{errors.steps}</p>}
                 </div>
 
                 <button
