@@ -1,9 +1,7 @@
+import HomePage from "./components/HomePage";
+
 function App() {
-  return (
-    <div className="text-3xl font-bold text-blue-500">
-      Hello, Tailwind is working! 🚀
-    </div>
-  );
+  return <HomePage />;
 }
 
 export default App;
