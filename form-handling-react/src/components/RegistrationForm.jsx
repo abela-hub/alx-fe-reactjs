@@ -1,11 +1,12 @@
-import React, { useState } from "react";
+import { useState } from "react";
 
-function RegistrationForm() {
+const RegistrationForm = () => {
     const [formData, setFormData] = useState({
         username: "",
         email: "",
         password: "",
     });
+
     const [error, setError] = useState("");
 
     const handleChange = (e) => {
@@ -15,52 +16,60 @@ function RegistrationForm() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        if (!formData.username || !formData.email || !formData.password) {
+        const { username, email, password } = formData;
+
+        if (!username || !email || !password) {
             setError("All fields are required!");
             return;
         }
+
         setError("");
-        alert("User registered successfully!");
+        console.log("User Registered:", formData);
+
+        // Mock API simulation
+        alert(`User ${username} registered successfully!`);
     };
 
     return (
-        <form onSubmit={handleSubmit}>
-            <h2>User Registration (Controlled)</h2>
+        <div style={{ maxWidth: "400px", margin: "auto" }}>
+            <h2>Controlled Registration Form</h2>
+            <form onSubmit={handleSubmit}>
+                <div>
+                    <label>Username:</label><br />
+                    <input
+                        type="text"
+                        name="username"
+                        value={formData.username}
+                        onChange={handleChange}
+                    />
+                </div>
 
-            <div>
-                <label>Username:</label>
-                <input
-                    type="text"
-                    name="username"
-                    value={formData.username} {/* ✅ Controlled */}
-                    onChange={handleChange}
-                />
-            </div>
+                <div>
+                    <label>Email:</label><br />
+                    <input
+                        type="email"
+                        name="email"
+                        value={formData.email}
+                        onChange={handleChange}
+                    />
+                </div>
 
-            <div>
-                <label>Email:</label>
-                <input
-                    type="email"
-                    name="email"
-                    value={formData.email} {/* ✅ Controlled */}
-                    onChange={handleChange}
-                />
-            </div>
+                <div>
+                    <label>Password:</label><br />
+                    <input
+                        type="password"
+                        name="password"
+                        value={formData.password}
+                        onChange={handleChange}
+                    />
+                </div>
 
-            <div>
-                <label>Password:</label>
-                <input
-                    type="password"
-                    name="password"
-                    value={formData.password} {/* ✅ Controlled */}
-                    onChange={handleChange}
-                />
-            </div>
+                {error && <p style={{ color: "red" }}>{error}</p>}
 
-            {error && <p style={{ color: "red" }}>{error}</p>}
-            <button type="submit">Register</button>
-        </form>
+                <button type="submit">Register</button>
+            </form>
+        </div>
     );
-}
+};
 
 export default RegistrationForm;
