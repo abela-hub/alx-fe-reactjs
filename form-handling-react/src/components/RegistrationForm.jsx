@@ -1,28 +1,39 @@
 import { useState } from "react";
 
 const RegistrationForm = () => {
-    // Define state for controlled inputs
+    // Controlled state variables
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [error, setError] = useState("");
+
+    // Object to hold validation errors
+    const [errors, setErrors] = useState({});
 
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        if (!username || !email || !password) {
-            setError("All fields are required!");
-            return;
-        }
+        const newErrors = {};
 
-        setError("");
+        // ✅ Explicit field checks
+        if (!username) newErrors.username = "Username is required";
+        if (!email) newErrors.email = "Email is required";
+        if (!password) newErrors.password = "Password is required";
+
+        // ✅ Update error state
+        setErrors(newErrors);
+
+        // Stop submission if any errors exist
+        if (Object.keys(newErrors).length > 0) return;
+
+        // If no errors, simulate registration
         console.log("User Registered:", { username, email, password });
         alert(`User ${username} registered successfully!`);
 
-        // Clear form
+        // Reset form
         setUsername("");
         setEmail("");
         setPassword("");
+        setErrors({});
     };
 
     return (
@@ -34,9 +45,10 @@ const RegistrationForm = () => {
                     <input
                         type="text"
                         name="username"
-                        value={username}         {/* ✅ controlled input */}
+                        value={username}
                         onChange={(e) => setUsername(e.target.value)}
                     />
+                    {errors.username && <p style={{ color: "red" }}>{errors.username}</p>}
                 </div>
 
                 <div>
@@ -44,9 +56,10 @@ const RegistrationForm = () => {
                     <input
                         type="email"
                         name="email"
-                        value={email}            {/* ✅ controlled input */}
+                        value={email}
                         onChange={(e) => setEmail(e.target.value)}
                     />
+                    {errors.email && <p style={{ color: "red" }}>{errors.email}</p>}
                 </div>
 
                 <div>
@@ -54,12 +67,11 @@ const RegistrationForm = () => {
                     <input
                         type="password"
                         name="password"
-                        value={password}         {/* ✅ controlled input */}
+                        value={password}
                         onChange={(e) => setPassword(e.target.value)}
                     />
+                    {errors.password && <p style={{ color: "red" }}>{errors.password}</p>}
                 </div>
-
-                {error && <p style={{ color: "red" }}>{error}</p>}
 
                 <button type="submit">Register</button>
             </form>
