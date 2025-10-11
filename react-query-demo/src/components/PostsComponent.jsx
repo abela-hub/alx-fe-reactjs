@@ -2,15 +2,25 @@ import React from "react";
 import { useQuery } from "react-query";
 import axios from "axios";
 
+// Fetch posts from JSONPlaceholder
 const fetchPosts = async () => {
     const response = await axios.get("https://jsonplaceholder.typicode.com/posts");
     return response.data;
 };
 
 const PostsComponent = () => {
-    const { data, isLoading, isError, error, refetch } = useQuery("posts", fetchPosts, {
-        staleTime: 60000, // 1 minute caching
-        cacheTime: 300000, // 5 minutes
+    const {
+        data,
+        isLoading,
+        isError,
+        error,
+        refetch,
+        isFetching,
+    } = useQuery("posts", fetchPosts, {
+        staleTime: 60000,          // Cache fresh for 1 minute
+        cacheTime: 300000,          // Keep cache for 5 minutes
+        refetchOnWindowFocus: true, // Refetch when window regains focus
+        keepPreviousData: true,     // Keep previous data while fetching new
     });
 
     if (isLoading) return <p>Loading posts...</p>;
@@ -25,6 +35,7 @@ const PostsComponent = () => {
             >
                 Refresh Posts
             </button>
+            {isFetching && <p className="text-gray-500 mb-2">Updating posts...</p>}
             <ul className="space-y-2">
                 {data.map((post) => (
                     <li key={post.id} className="border p-2 rounded shadow">
