@@ -4,6 +4,7 @@ import Home from "./pages/Home.jsx";
 import Login from "./pages/Login.jsx";
 import Profile from "./components/Profile.jsx";
 import UserPost from "./pages/UserPost.jsx";
+import BlogPost from "./pages/BlogPost.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 
 function App() {
@@ -24,8 +25,9 @@ function App() {
           }
         />
 
-        {/* Dynamic route example */}
+        {/* Dynamic routes */}
         <Route path="/post/:postId" element={<UserPost />} />
+        <Route path="/blog/:id" element={<BlogPost />} />
       </Routes>
     </Router>
   );
