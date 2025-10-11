@@ -1,9 +1,7 @@
-import React from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 
 const FormikForm = () => {
-    // ✅ Define validation rules with Yup
     const validationSchema = Yup.object({
         username: Yup.string().required("Username is required"),
         email: Yup.string()
@@ -14,9 +12,8 @@ const FormikForm = () => {
             .required("Password is required"),
     });
 
-    // ✅ Handle submission
     const handleSubmit = (values, { resetForm }) => {
-        console.log("User Registered:", values);
+        console.log("Formik form submitted:", values);
         alert(`User ${values.username} registered successfully!`);
         resetForm();
     };
@@ -24,7 +21,6 @@ const FormikForm = () => {
     return (
         <div style={{ maxWidth: "400px", margin: "auto" }}>
             <h2>Formik Registration Form</h2>
-
             <Formik
                 initialValues={{ username: "", email: "", password: "" }}
                 validationSchema={validationSchema}
@@ -34,31 +30,19 @@ const FormikForm = () => {
                     <div>
                         <label>Username:</label><br />
                         <Field type="text" name="username" />
-                        <ErrorMessage
-                            name="username"
-                            component="p"
-                            style={{ color: "red" }}
-                        />
+                        <ErrorMessage name="username" component="p" style={{ color: "red" }} />
                     </div>
 
                     <div>
                         <label>Email:</label><br />
                         <Field type="email" name="email" />
-                        <ErrorMessage
-                            name="email"
-                            component="p"
-                            style={{ color: "red" }}
-                        />
+                        <ErrorMessage name="email" component="p" style={{ color: "red" }} />
                     </div>
 
                     <div>
                         <label>Password:</label><br />
                         <Field type="password" name="password" />
-                        <ErrorMessage
-                            name="password"
-                            component="p"
-                            style={{ color: "red" }}
-                        />
+                        <ErrorMessage name="password" component="p" style={{ color: "red" }} />
                     </div>
 
                     <button type="submit">Register</button>
