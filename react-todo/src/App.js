@@ -1,6 +1,8 @@
 import React from "react";
+import ReactDOM from "react-dom/client";
 import TodoList from "./components/TodoList";
-import "./App.css"; // optional, for styling
+import "./App.css"; // optional styling
+import reportWebVitals from "./reportWebVitals";
 
 function App() {
   return (
@@ -12,3 +14,14 @@ function App() {
 }
 
 export default App;
+
+// Optional: If you want to include index.js logic here for rendering
+const root = ReactDOM.createRoot(document.getElementById("root"));
+root.render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
+);
+
+// Measure performance (optional)
+reportWebVitals();
